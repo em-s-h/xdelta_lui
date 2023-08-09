@@ -1,12 +1,28 @@
-use gtk::prelude::*;
-
 mod ui;
 
-pub struct Data {
-    input_file: String,
-    target_file: String,
-    output_file: String,
-    buffer_size: usize,
+pub struct File {
+    /// 'source' refers to the original ROM
+    source: String,
+
+    /// 'target' refers to the patched ROM
+    target: String,
+
+    /// 'output' refers to the patch
+    output: String,
 }
 
-fn run() {}
+pub enum Mode {
+    /// Create patch
+    Create,
+
+    /// Apply patch
+    Apply,
+}
+
+const MAX_BUFFER_SIZE: u32 = 1000000000; // 1GB
+
+pub fn run() {}
+
+fn apply_patch(files: &File) {}
+
+fn create_patch(files: &File) {}

@@ -1,3 +1,3 @@
-use gtk::prelude::*;
-
-fn main() {}
+fn main() {
+    xdelta_lui::run();
+}

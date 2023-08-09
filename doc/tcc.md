@@ -81,7 +81,7 @@ has all of the features of the command line tool.
 
 | Task                                  | Duration          | Start       | End         |
 | ------------------------------------- | ----------------- | ----------- | ----------- |
-| [TCC](#TCC)                           | 40 days & 5 hours | 04/06/2023  | ~16/10/2023 |
+| [TCC](#TCC)                           | 39 days & 5 hours | 04/06/2023  | ~16/10/2023 |
 | [Development](#development)           | 253 days          | 04/06/2023  | 01/11/2023  |
 
 
@@ -98,7 +98,7 @@ has all of the features of the command line tool.
 | Tools used                                                   | 2 hours  | 11/06/2023  | 11/06/2023  |
 | Logo                                                         | 2 days   | 17/06/2023  | 18/06/2023  |
 | Prototype screen layout                                      | 5 days   | 23/06/2023  | 28/06/2023  |
-| Planning                                                     | 15 days  | 14/07/2023  | 29/07/2023  |
+| Planning                                                     | 7 days   | 01/09/2023  | 08/09/2023  |
 | Results obtained                                             | 5 days   | 08/09/2023  | 13/09/2023  |
 | Conclusion                                                   | 6 days   | ~10/10/2023 | ~16/10/2023 |
 
@@ -108,12 +108,12 @@ has all of the features of the command line tool.
 
 ---
 
-| Task       | Duration | Start       | End        |
-| ---------- | -------- | ----------- | ---------- |
-| Study Rust | 88 days  | 04/06/2023  | 31/08/2023 |
-| Backend    | 60 days  | 01/09/2023  | 31/10/2023 |
-| Testing    | 45 days  | 01/09/2023  | 31/10/2023 |
-| Frontend   | 60 days  | 01/09/2023  | 31/10/2023 |
+| Task                  | Duration | Start       | End        |
+| --------------------- | -------- | ----------- | ---------- |
+| Study Rust + Rust-gtk | 88 days  | 04/06/2023  | 31/08/2023 |
+| Backend               | 60 days  | 01/09/2023  | 31/10/2023 |
+| Testing               | 45 days  | 01/09/2023  | 31/10/2023 |
+| Frontend              | 60 days  | 01/09/2023  | 31/10/2023 |
 
 
 
