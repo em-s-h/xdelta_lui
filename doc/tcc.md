@@ -49,13 +49,13 @@ An User Interface for the xdelta command line tool.
 
 ### Objective
 
-The main objective is to make an User Interface that offers all of the features from the command
-line tool xdelta for begginer Linux users.
+The main objective is to make an User Interface that offers the main features from the command line
+tool xdelta for begginer Linux users.
 
 ### Justification
 
 This theme was chosen because there isn't a linux user interface for this command line tool, that
-has all of the features of the command line tool.
+has the main features of the command line tool.
 
 <!-- }}} -->
 
@@ -69,9 +69,10 @@ has all of the features of the command line tool.
 
 ### Rom Patcher JS
 
-- Pros: Shows the ROM's CRC32, MD5 and SHA-1 and supports different patch formats.
+- Pros: Supports different patch formats, available in the browser.
 
-- Cons: Lacks the features of xdelta and has a size limit.
+- Cons: Loads the entire rom into ram, which can cause issues with a computer with low ram, and it
+only applies patches.
 
 <!-- }}} -->
 
@@ -82,7 +83,7 @@ has all of the features of the command line tool.
 | Task                                  | Duration          | Start       | End         |
 | ------------------------------------- | ----------------- | ----------- | ----------- |
 | [TCC](#TCC)                           | 39 days & 5 hours | 04/06/2023  | ~16/10/2023 |
-| [Development](#development)           | 253 days          | 04/06/2023  | 01/11/2023  |
+| [Development](#development)           | 246 days          | 04/06/2023  | 01/11/2023  |
 
 
 
@@ -110,10 +111,10 @@ has all of the features of the command line tool.
 
 | Task                  | Duration | Start       | End        |
 | --------------------- | -------- | ----------- | ---------- |
-| Study Rust + Rust-gtk | 88 days  | 04/06/2023  | 31/08/2023 |
+| Study Rust + Rust-gtk | 81 days  | 04/06/2023  | 24/08/2023 |
 | Backend               | 60 days  | 01/09/2023  | 31/10/2023 |
+| Frontend              | 60 days  | 24/08/2023  | 31/10/2023 |
 | Testing               | 45 days  | 01/09/2023  | 31/10/2023 |
-| Frontend              | 60 days  | 01/09/2023  | 31/10/2023 |
 
 
 

@@ -13,7 +13,6 @@ pub struct Files {
 }
 
 pub struct Cli {
-    buffer_size: u32,
     flags: String,
     files: Files,
 }
@@ -25,38 +24,8 @@ pub enum Mode {
     /// Apply patch
     Apply,
 }
+
+const BUFFER_SIZE: u32 = 1000000000;
 ```
-
-<!-- }}} -->
-
-# Functions     <!-- {{{ -->
-
-## lib.rs       <!-- {{{ -->
-
-```rust
-pub fn run() {}
-
-fn apply_patch(cli: &Cli) {}
-
-fn create_patch(cli: &Cli) {}
-
-// After 'get_files'
-fn get_buffer_size(cli: &Files) -> u32 {}
-```
-
-<!-- }}} -->
-
-## ui.rs        <!-- {{{ -->
-
-```rust
-pub fn start_ui() {}
-
-fn build_window() {}
-fn build_buttons() {}
-
-pub fn get_files(mode: Mode) -> Files {}
-```
-
-<!-- }}} -->
 
 <!-- }}} -->
