@@ -1,6 +1,5 @@
 ## Methodology              <!-- {{{ -->
 
-
 1. screen prototype + study rust/-gtk4
 2. translate screen prototype to xml + make an activity diagram of the app
 3. start coding
@@ -9,7 +8,7 @@
 
 #### [Neovim](https://neovim.io/)
 
-![neovim](./assets/neovim.png)
+![neovim](./assets/nvim.svg)
 
 Neovim is a fork of the [Vim](https://www.vim.org/) text editor, engineered for extensibility and
 usability, to encourage new applications and contributions. Just like vim, neovim allows the user to
@@ -17,11 +16,25 @@ add or create plugins to their setup.
 
 ---
 
-#### Git
+#### [Git](https://git-scm.com/)
+
+![git](./assets/git.svg)
+
+Git is a distributed version control system that tracks changes in any set of computer files. Its
+goals include speed, data integrity, and support for distributed, non-linear workflows.
 
 ---
 
-#### PlantUML
+#### [Github](https://github.com/)
+
+![github](./assets/github.svg)
+
+GitHub is a platform and cloud-based service for software development and version control using Git,
+allowing developers to store and manage their code online.
+
+---
+
+#### [PlantUML](https://plantuml.com/)
 
 ![plantuml](./assets/plantuml.svg)
 
@@ -43,13 +56,19 @@ memory, without the need of a garbage collector.
 
 ---
 
-#### XML
+#### [XML](https://www.w3.org/XML/)
+
+![xml](./assets/xml.svg)
+
+XML (Extensible Markup Language) is a markup language and file format for storing, transmitting, and
+reconstructing arbitrary data. Its goals are to emphasize simplicity, generality, and usability
+across the Internet.
 
 ---
 
 #### [GTK](https://gtk.org/)
 
-![gtk](./assets/gtk.png)
+![gtk](./assets/gtk.svg)
 
 GTK is a free and open-source, cross-platform, object-oriented widget toolkit for creating Graphical
 User Interfaces (GUIs). It's written in C with GObject, to enable support for the object-oriented
@@ -60,7 +79,12 @@ language for the GTK4 library.
 
 ---
 
-#### Adwaita
+#### Libadwaita
+
+![libadwaita](./assets/libadwaita.svg)
+
+Libadwaita is an project that serves to extend GTK's base widgets with those specifically conforming
+to the GNOME Human Interface Guidelines (HIG).
 
 <!-- }}} -->
 
