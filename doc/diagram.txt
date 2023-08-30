@@ -1,0 +1,127 @@
+@startuml
+
+|#mistyrose|main loop|
+|main.rs|
+start
+
+:Include window template;
+:build_ui();
+
+|#aliceblue|window module|
+:Bind the template and
+template callbacks;
+:Initialize template;
+
+|main.rs|
+:Initialize and run
+the application;
+
+|main loop|
+:[[https://gtk-rs.org/gtk4-rs/stable/latest/book/main_event_loop.html Main loop]]|
+detach
+
+group Signals
+' {{{
+    split
+        -[hidden]->
+        :source_apply_button_clicked>
+    split again
+        -[hidden]->
+        :source_create_button_clicked>
+    end split
+    (A)
+    detach
+
+    split
+        -[hidden]->
+        :target_apply_button_clicked>
+    split again
+        -[hidden]->
+        :target_create_button_clicked>
+    end split
+    (B)
+    detach
+    
+    split 
+        -[hidden]->
+        :output_apply_button_clicked>
+    split again
+        -[hidden]->
+        :output_create_button_clicked>
+    end split
+    (C)
+    detach
+
+    split
+        -[hidden]->
+        :apply_patch_button_clicked>
+        (D)
+        detach
+    split again
+        -[hidden]->
+        :create_patch_button_clicked>
+        (E)
+        detach
+    end split
+end group
+' }}}
+
+|window module|
+group Signal handlers
+' {{{
+    split
+        -[hidden]->
+        (A)
+        :choose_source()<
+        :build_file_chooser();
+        :Open file chooser dialog;
+        :Change source button
+        label to file name;
+        :Store file path;
+        detach
+
+    split again
+        -[hidden]->
+        (B)
+        :choose_output()<
+        :build_file_chooser();
+        :Open file chooser dialog;
+        :Change output button
+        label to file name;
+        :Store file path;
+        detach
+
+    split again
+        -[hidden]->
+        (C)
+        :choose_target()<
+        :build_file_chooser();
+        :Open file chooser dialog;
+        :Change target button
+        label to file name;
+        :Store file path;
+        detach
+    end split
+
+    split
+        -[hidden]->
+        (D)
+        :apply_patch()<
+        :build_progress_window();
+        :Call xdelta3;
+        :Open progress window;
+        detach
+
+    split again
+        -[hidden]->
+        (E)
+        :create_patch()<
+        :build_progress_window();
+        :Call xdelta3;
+        :Open progress window;
+        detach
+    end split
+end group
+' }}}
+
+@enduml

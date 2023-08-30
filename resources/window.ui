@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
     <template class="Window" parent="GtkApplicationWindow">
-        <property name="label">Xdelta - LUI</property>
+        <property name="title">Xdelta - LUI</property>
         <child>
             <object class="GtkNotebook">
                 <!-- Apply ROM tab -->
@@ -125,7 +125,7 @@
 
                     <!-- Create patch button -->
                     <child>
-                        <object class="GtkButton" id="apply_patch">
+                        <object class="GtkButton" id="create_patch">
                             <signal name="clicked" handler="create_patch"/>
                             <property name="label" translatable="yes">Create patch</property>
                             <property name="margin-top">12</property>

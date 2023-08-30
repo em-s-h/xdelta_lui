@@ -112,7 +112,7 @@ only applies patches.
 | Task                  | Duration | Start       | End        |
 | --------------------- | -------- | ----------- | ---------- |
 | Study Rust + Rust-gtk | 81 days  | 04/06/2023  | 24/08/2023 |
-| Backend               | 60 days  | 01/09/2023  | 31/10/2023 |
+| Backend               | 60 days  | 29/08/2023  | 31/10/2023 |
 | Frontend              | 60 days  | 24/08/2023  | 31/10/2023 |
 | Testing               | 45 days  | 01/09/2023  | 31/10/2023 |
 
@@ -120,9 +120,15 @@ only applies patches.
 
 <!-- }}} -->
 
-## Tools used               <!-- {{{ -->
+## Methodology              <!-- {{{ -->
 
-### [Neovim](https://neovim.io/)
+1. screen prototype + study rust/-gtk4
+2. translate screen prototype to xml + make an activity diagram of the app
+3. start coding
+
+### Tools used               <!-- {{{ -->
+
+#### [Neovim](https://neovim.io/)
 
 Neovim is a open-source [Vim](https://www.vim.org/)-based text & code editor engineered for
 extensibility and usability, to encourage new applications and contributions.
@@ -131,7 +137,11 @@ extensibility and usability, to encourage new applications and contributions.
 
 ---
 
-### [Rust](https://www.rust-lang.org/)
+#### PlantUML
+
+---
+
+#### [Rust](https://www.rust-lang.org/)
 
 Rust is a multi-paradigm, general-purpose programming language that emphasizes performance, type
 safety, and concurrency. 
@@ -140,11 +150,21 @@ safety, and concurrency.
 
 ---
 
-### [Rust-gtk4](https://gtk-rs.org/)
+#### XML
+
+---
+
+#### [Rust-gtk4](https://gtk-rs.org/)
 
 gtk-rs is a project that provides GTK bindings for the Rust language, this project contains
 Rust-gtk4, which provides Rust bindings for GTK4
 
 ![gtk4](./assets/rust-gtk.png)
+
+---
+
+#### Adwaita
+
+<!-- }}} -->
 
 <!-- }}} -->
