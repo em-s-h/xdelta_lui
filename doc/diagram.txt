@@ -4,124 +4,123 @@
 |main.rs|
 start
 
-:Include window template;
+:Incluir o template;
 :build_ui();
 
 |#aliceblue|window module|
-:Bind the template and
+:Vincular o template e
 template callbacks;
-:Initialize template;
+:Inicializar o template;
 
 |main.rs|
-:Initialize and run
-the application;
+:Inicializar e executar
+a aplicação;
 
 |main loop|
-:[[https://gtk-rs.org/gtk4-rs/stable/latest/book/main_event_loop.html Main loop]]|
+:Main loop|
 detach
 
-group Signals
-' {{{
-    split
-        -[hidden]->
-        :source_apply_button_clicked>
-    split again
-        -[hidden]->
-        :source_create_button_clicked>
-    end split
-    (A)
-    detach
-
-    split
-        -[hidden]->
-        :target_apply_button_clicked>
-    split again
-        -[hidden]->
-        :target_create_button_clicked>
-    end split
-    (B)
-    detach
-    
-    split 
-        -[hidden]->
-        :output_apply_button_clicked>
-    split again
-        -[hidden]->
-        :output_create_button_clicked>
-    end split
-    (C)
-    detach
-
-    split
-        -[hidden]->
-        :apply_patch_button_clicked>
-        (D)
-        detach
-    split again
-        -[hidden]->
-        :create_patch_button_clicked>
-        (E)
-        detach
-    end split
-end group
-' }}}
-
-|window module|
-group Signal handlers
-' {{{
-    split
-        -[hidden]->
+split
+    -[hidden]->
+    group Signals
+    ' {{{
+        split
+            -[hidden]->
+            :source_apply_button_clicked>
+        split again
+            -[hidden]->
+            :source_create_button_clicked>
+        end split
         (A)
-        :choose_source()<
-        :build_file_chooser();
-        :Open file chooser dialog;
-        :Change source button
-        label to file name;
-        :Store file path;
         detach
 
-    split again
-        -[hidden]->
+        split
+            -[hidden]->
+            :target_apply_button_clicked>
+        split again
+            -[hidden]->
+            :target_create_button_clicked>
+        end split
         (B)
-        :choose_output()<
-        :build_file_chooser();
-        :Open file chooser dialog;
-        :Change output button
-        label to file name;
-        :Store file path;
         detach
-
-    split again
-        -[hidden]->
+        
+        split 
+            -[hidden]->
+            :output_apply_button_clicked>
+        split again
+            -[hidden]->
+            :output_create_button_clicked>
+        end split
         (C)
-        :choose_target()<
-        :build_file_chooser();
-        :Open file chooser dialog;
-        :Change target button
-        label to file name;
-        :Store file path;
-        detach
-    end split
-
-    split
-        -[hidden]->
-        (D)
-        :apply_patch()<
-        :build_progress_window();
-        :Call xdelta3;
-        :Open progress window;
         detach
 
-    split again
-        -[hidden]->
-        (E)
-        :create_patch()<
-        :build_progress_window();
-        :Call xdelta3;
-        :Open progress window;
+        split
+            -[hidden]->
+            :apply_patch_button_clicked>
+            (D)
+            detach
+        split again
+            -[hidden]->
+            :create_patch_button_clicked>
+            (E)
+            detach
+        end split
+    end group
+    ' }}}
+    detach
+
+split again
+    -[hidden]->
+    |window module|
+    group Signal handlers
+    ' {{{
+        split
+            -[hidden]->
+            (A)
+            :choose_source()<
+            :build_file_chooser(file, mode);
+
+        split again
+            -[hidden]->
+            (B)
+            :choose_target()<
+            :build_file_chooser(file, mode);
+
+        split again
+            -[hidden]->
+            (C)
+            :choose_output()<
+            :build_file_chooser(file, mode);
+        end split
+
+        :choose_file(chooser, button);
+        :Abrir caixa de diálogo do seletor de arquivos;
+        :get_file_name();
+        :Alterar rótulo do botão
+        para o nome do arquivo;
+        :Armazenar caminho do arquivo;
         detach
-    end split
-end group
-' }}}
+
+        split
+            -[hidden]->
+            (D)
+            :apply_patch()<
+            :build_progress_window(message);
+
+        split again
+            -[hidden]->
+            (E)
+            :create_patch()<
+            :build_progress_window(message);
+        end split
+
+        :call_xdelta(args, files, progress);
+        :Executar xdelta3;
+        :Abrir janela de progresso;
+        detach
+    end group
+    ' }}}
+    detach
+end split
 
 @enduml

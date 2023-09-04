@@ -31,31 +31,30 @@ Emilly Magalhães de Souza:
 
 ## Intro                    <!-- {{{ -->
 
-
 Near the end of 2022 I had switched my operating system from Windows to Xubuntu, during this time
 I was searching for the Linux versions of the apps I had on Windows, while most of the software
-I used before had a Linux version some didn't as was the case for an user interface for a coomand
-line tool I used, instead a different user interface called [YADP](https://github.com/Nhoya/YADP)
-was available, which had many errors and lacked many features.
+I used before had a Linux version some didn't as was the case for a Graphical User Interface (GUI)
+for a command line tool I frequently used, instead a different user interface called [YADP](https://github.com/Nhoya/YADP)
+was available, but it had many errors and lacked many features.
 
 This forced me to use the command line tool on the terminal, which was very difficult to me. Thus
-I have decided to make an xdelta user interface for Linux systems, utilizing the Rust programming
-language and the multi-platform GUI toolkit GTK4, this will allow anyone switching from a different
-OS to Linux to be able to use xdelta without the terminal.
+I have decided to make a GUI for xdelta3 for Linux systems, utilizing the Rust programming language
+and the multi-platform GUI toolkit GTK4, this will allow anyone switching from a different OS to
+Linux to be able to use the tool without the terminal.
 
 ### Theme
 
-An User Interface for the xdelta command line tool.
+A Graphical User Interface (GUI) for the xdelta command line tool.
 
 ### Objective
 
-The main objective is to make an User Interface that offers the main features from the command line
-tool xdelta for begginer Linux users.
+The main objective is to make a Graphical User Interface (GUI) that offers the main features from the
+command line tool xdelta3 for begginer Linux users.
 
 ### Justification
 
-This theme was chosen because there isn't a linux user interface for this command line tool, that
-has the main features of the command line tool.
+This theme was chosen because there isn't a linux Graphical User Interface (GUI) for this command
+line tool, that has it's main features.
 
 <!-- }}} -->
 
@@ -82,7 +81,7 @@ only applies patches.
 
 | Task                                  | Duration          | Start       | End         |
 | ------------------------------------- | ----------------- | ----------- | ----------- |
-| [TCC](#TCC)                           | 39 days & 5 hours | 04/06/2023  | ~16/10/2023 |
+| [TCC](#TCC)                           | 37 days & 5 hours | 04/06/2023  | ~16/10/2023 |
 | [Development](#development)           | 246 days          | 04/06/2023  | 01/11/2023  |
 
 
@@ -96,11 +95,11 @@ only applies patches.
 | Chronogram                                                   | 8 days   | 04/06/2023  | 11/06/2023  |
 | Intro + theme + objective + justification + market research  | 2 hours  | 08/06/2023  | 08/06/2023  |
 | Member roles + necessary knowledge                           | 1 hour   | 08/06/2023  | 08/06/2023  |
-| Tools used                                                   | 2 hours  | 11/06/2023  | 11/06/2023  |
+| Methodology + tools used                                     | 2 hours  | 01/09/2023  | 01/09/2023  |
 | Logo                                                         | 2 days   | 17/06/2023  | 18/06/2023  |
 | Prototype screen layout                                      | 5 days   | 23/06/2023  | 28/06/2023  |
-| Planning                                                     | 7 days   | 01/09/2023  | 08/09/2023  |
-| Results obtained                                             | 5 days   | 08/09/2023  | 13/09/2023  |
+| Planning                                                     | 5 days   | 29/08/2023  | 03/09/2023  |
+| Results obtained                                             | 5 days   | ~08/10/2023 | ~13/10/2023 |
 | Conclusion                                                   | 6 days   | ~10/10/2023 | ~16/10/2023 |
 
 
@@ -122,48 +121,110 @@ only applies patches.
 
 ## Methodology              <!-- {{{ -->
 
-1. screen prototype + study rust/-gtk4
-2. translate screen prototype to xml + make an activity diagram of the app
-3. start coding
+After I switched my operating system from Windows to Linux I realized that there was no Graphical
+User Interface (GUI) for the command line tool xdelta3, this forced me to learn how to use the tool in the
+command line, which was a very difficult task for a begginer in Linux.
+
+Now after learning how xdelta3 works my goal is to make a GUI for the tool to facilitate the
+transition of other people from an other OS to Linux.
+
+Firstly I started to study the Rust programming language and the GTK library, after that I made the
+prototype of how the application should look like and then translated this prototype to a xml
+template that I could use to initialize the GUI.
+
+Before starting to program the communication between the GUI and xdelta3 I made an activity diagram
+of the application, this allowed me to reduce the ammount of refactoring I would have to perform.
 
 ### Tools used               <!-- {{{ -->
 
 #### [Neovim](https://neovim.io/)
 
-Neovim is a open-source [Vim](https://www.vim.org/)-based text & code editor engineered for
-extensibility and usability, to encourage new applications and contributions.
+![neovim](./assets/nvim.svg)
 
-![neovim](./assets/neovim.png)
+Neovim is a fork of the [Vim](https://www.vim.org/) terminal text and source code editor, engineered
+for extensibility and usability, to encourage new applications and contributions. Just like vim,
+neovim allows the user to add or create plugins to their setup.
 
 ---
 
-#### PlantUML
+#### [Git](https://git-scm.com/)
+
+![git](./assets/git.svg)
+
+Git is a distributed version control system that tracks changes in any set of computer files. Its
+goals include speed, data integrity, and support for distributed, non-linear workflows.
+
+---
+
+#### [Github](https://github.com/)
+
+![github](./assets/github.svg)
+
+GitHub is a platform and cloud-based service for software development and version control using Git,
+allowing developers to store and manage their code online.
+
+---
+
+#### [PlantUML](https://plantuml.com/)
+
+![plantuml](./assets/plantuml.svg)
+
+PlantUML is a free and open-source drawing tool that allows users to create diagrams from a simple
+and human readable text description.
+
+I used PlantUML for this project because it allowed me to easily create an activity diagram of my
+application without having to spend too much time on the appearence.
 
 ---
 
 #### [Rust](https://www.rust-lang.org/)
 
-Rust is a multi-paradigm, general-purpose programming language that emphasizes performance, type
-safety, and concurrency. 
-
 ![rust](./assets/rust.svg)
 
----
-
-#### XML
-
----
-
-#### [Rust-gtk4](https://gtk-rs.org/)
-
-gtk-rs is a project that provides GTK bindings for the Rust language, this project contains
-Rust-gtk4, which provides Rust bindings for GTK4
-
-![gtk4](./assets/rust-gtk.png)
+Rust is a multi-paradigm, general-purpose programming language that emphasizes performance, type
+safety, and concurrency. It enforces memory safety by ensuring that all references point to valid
+memory, without the need of a garbage collector.
 
 ---
 
-#### Adwaita
+#### [Markdown](https://www.markdownguide.org/)
+
+![markdown](./assets/md.svg)
+
+Markdown is a lightweight markup language for creating formatted text using a plain-text editor. It
+is widely used in online forums, collaborative software, documentation pages, and readme files.
+
+---
+
+#### [XML](https://www.w3.org/XML/)
+
+![xml](./assets/xml.svg)
+
+XML (Extensible Markup Language) is a markup language and file format for storing, transmitting, and
+reconstructing arbitrary data. Its goals are to emphasize simplicity, generality, and usability
+across the Internet.
+
+---
+
+#### [GTK](https://gtk.org/)
+
+![gtk](./assets/gtk.svg)
+
+GTK is a free and open-source, cross-platform, object-oriented widget toolkit for creating Graphical
+User Interfaces (GUIs). It's written in C with GObject, to enable support for the object-oriented
+capabilities.
+
+For this project I used the gtk4-rs package, since it provides safe bindings to the Rust programming
+language for the GTK4 library.
+
+---
+
+#### Libadwaita
+
+![libadwaita](./assets/libadwaita.svg)
+
+Libadwaita is an project that serves to extend GTK's base widgets with those specifically conforming
+to the GNOME Human Interface Guidelines (HIG).
 
 <!-- }}} -->
 
