@@ -4,17 +4,17 @@
 |main.rs|
 start
 
-:Incluir o template;
+:Include window template;
 :build_ui();
 
 |#aliceblue|window module|
-:Vincular o template e
+:Bind the template and
 template callbacks;
-:Inicializar o template;
+:Initialize template;
 
 |main.rs|
-:Inicializar e executar
-a aplicação;
+:Initialize and run
+the application;
 
 |main loop|
 :Main loop|
@@ -94,11 +94,11 @@ split again
         end split
 
         :choose_file(chooser, button);
-        :Abrir caixa de diálogo do seletor de arquivos;
+        :Open file chooser dialog;
         :get_file_name();
-        :Alterar rótulo do botão
-        para o nome do arquivo;
-        :Armazenar caminho do arquivo;
+        :Change button label
+        to file name;
+        :Store file path;
         detach
 
         split
@@ -115,8 +115,8 @@ split again
         end split
 
         :call_xdelta(args, files, progress);
-        :Executar xdelta3;
-        :Abrir janela de progresso;
+        :Call xdelta3;
+        :Open progress window;
         detach
     end group
     ' }}}

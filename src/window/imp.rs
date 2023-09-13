@@ -1,64 +1,50 @@
-use gtk::{glib, CompositeTemplate, subclass::prelude::*, Button};
+use gtk::{glib, CompositeTemplate, subclass::prelude::*, Button, prelude::StaticTypeExt, Notebook, NotebookTab, Label};
 use glib::subclass::InitializingObject;
-
-const BUFFER_SIZE: u32 = 1000000000;
+use crate::lib::Files;
+use std::cell::Cell;
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/github/em-s-h/xdelta-lui/window.ui")]
 pub struct Window {
-    pub sorce_file: String,
-    pub target_file: String,
-    pub output_file: String,
+    pub files: Cell<Files>,
 }
 
 #[gtk::template_callbacks]
 impl Window {
     #[template_callback]
     fn choose_source(&self, button: &Button) {
-        unimplemented!();
+        println!("{:?}", button);
     }
 
     #[template_callback]
     fn choose_target(&self, button: &Button) {
-        unimplemented!();
+        println!("{:?}", button);
     }
 
     #[template_callback]
     fn choose_output(&self, button: &Button) {
-        unimplemented!();
+        println!("{:?}", button);
     }
 
     #[template_callback]
     fn create_patch(&self, button: &Button) {
-        unimplemented!();
+        println!("{:?}", button);
     }
 
     #[template_callback]
     fn apply_patch(&self, button: &Button) {
-        unimplemented!();
-    }
-
-    fn build_file_chooser() {
-        unimplemented!();
-    }
-
-    fn build_progress_window(message: &str) {
-        unimplemented!();
-    }
-
-    fn get_file_name(path: &str) -> &str {
-        unimplemented!();
+        println!("{:?}", button);
     }
 }
 
 // The central trait for subclassing a GObject
 #[glib::object_subclass]
 impl ObjectSubclass for Window {
-    // `NAME` needs to match `class` attribute of template
-    const NAME: &'static str = "Window";
-    type ParentType = gtk::ApplicationWindow;
+    // `NAME` needs to match 'class' attribute of template
+    const NAME: &'static str = "XdeltaWindow";
     type Type = super::Window;
+    type ParentType = gtk::ApplicationWindow;
 
     fn class_init(class: &mut Self::Class) {
         class.bind_template();
@@ -81,3 +67,7 @@ impl WindowImpl for Window {}
 
 // Trait shared by all application windows
 impl ApplicationWindowImpl for Window {}
+
+#[cfg(test)]
+mod test {
+}
