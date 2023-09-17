@@ -1,20 +1,36 @@
-use gtk::{glib, CompositeTemplate, subclass::prelude::*, Button, prelude::StaticTypeExt, Notebook, NotebookTab, Label};
+use crate::lib::{self, Files};
+use adw::prelude::{FileChooserExt, NativeDialogExt};
 use glib::subclass::InitializingObject;
-use crate::lib::Files;
-use std::cell::Cell;
+use gtk::{
+    glib::{self},
+    subclass::prelude::*,
+    Button, CompositeTemplate, FileChooserAction,
+};
+use std::cell::RefCell;
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/github/em-s-h/xdelta-lui/window.ui")]
 pub struct Window {
-    pub files: Cell<Files>,
+    pub parent_window: RefCell<gtk::Window>,
+    pub files: RefCell<Files>,
 }
 
 #[gtk::template_callbacks]
 impl Window {
     #[template_callback]
     fn choose_source(&self, button: &Button) {
-        println!("{:?}", button);
+        let filter = lib::build_file_filter(&["*", "*.iso", "*.nds"]);
+        let parent = self.parent_window.borrow().clone();
+
+        let file_chooser = lib::build_file_chooser(
+            "Select the ROM file to be patched:",
+            FileChooserAction::Open,
+            &parent,
+            &filter,
+        );
+
+        file_chooser.show();
     }
 
     #[template_callback]
@@ -57,7 +73,15 @@ impl ObjectSubclass for Window {
 }
 
 // Trait shared by all GObjects
-impl ObjectImpl for Window {}
+impl ObjectImpl for Window {
+    fn constructed(&self) {
+        self.parent_constructed();
+
+        let obj = self.obj();
+        obj.setup_parent_window();
+        obj.setup_files();
+    }
+}
 
 // Trait shared by all widgets
 impl WidgetImpl for Window {}
@@ -69,5 +93,4 @@ impl WindowImpl for Window {}
 impl ApplicationWindowImpl for Window {}
 
 #[cfg(test)]
-mod test {
-}
+mod test {}

@@ -1,7 +1,9 @@
 mod imp;
 
-use gtk::{gio, glib};
 use glib::Object;
+use gtk::{gio, glib, subclass::prelude::ObjectSubclassIsExt};
+
+use crate::lib::Files;
 
 glib::wrapper! {
     pub struct Window(ObjectSubclass<imp::Window>)
@@ -13,5 +15,17 @@ glib::wrapper! {
 impl Window {
     pub fn new(app: &adw::Application) -> Self {
         Object::builder().property("application", app).build()
+    }
+
+    fn setup_files(&self) {
+        self.imp().files.replace(Files {
+            source: "".to_string(),
+            target: "".to_string(),
+            output: "".to_string(),
+        });
+    }
+
+    fn setup_parent_window(&self) {
+        self.imp().parent_window.replace(gtk::Window::new());
     }
 }

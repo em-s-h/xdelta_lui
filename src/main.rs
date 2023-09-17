@@ -1,8 +1,8 @@
-mod window;
 mod lib;
+mod window;
 
-use std::process::{ Command, self };
 use gtk::{gio, glib, prelude::*};
+use std::process::{self, Command};
 use window::Window;
 
 const APP_ID: &str = "com.github.em-s-h.xdelta-lui";
@@ -25,7 +25,9 @@ fn build_ui(app: &adw::Application) {
 
 /// Verify if xdelta3 is installed.
 fn verify_xdelta() {
-    let status = Command::new("xdelta3").arg("-V").status()
+    let status = Command::new("xdelta3")
+        .arg("-V")
+        .status()
         .expect("Unable to execute process 'xdelta3 -V");
 
     if status.code().unwrap_or(0) == 127 {
