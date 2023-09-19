@@ -37,7 +37,7 @@ pub fn build_file_chooser(
         "Select".to_string()
     };
 
-    let file_chooser = FileChooserNative::builder()
+    FileChooserNative::builder()
         .title(title)
         .action(action)
         .transient_for(parent)
@@ -45,9 +45,6 @@ pub fn build_file_chooser(
         .visible(true)
         .accept_label(accept_label)
         .build()
-
-
-    file_chooser
 }
 
 pub fn build_file_filter(patterns: &[&str]) -> FileFilter {

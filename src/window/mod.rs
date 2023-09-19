@@ -24,8 +24,4 @@ impl Window {
             output: "".to_string(),
         });
     }
-
-    fn setup_parent_window(&self) {
-        self.imp().parent_window.replace(gtk::Window::new());
-    }
 }

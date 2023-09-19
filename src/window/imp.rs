@@ -2,9 +2,9 @@ use crate::lib::{self, Files};
 use adw::prelude::{FileChooserExt, NativeDialogExt};
 use glib::subclass::InitializingObject;
 use gtk::{
-    glib::{self},
+    glib::{self, object::Cast},
     subclass::prelude::*,
-    Button, CompositeTemplate, FileChooserAction,
+    Button, CompositeTemplate, FileChooserAction, ResponseType,
 };
 use std::cell::RefCell;
 
@@ -21,14 +21,25 @@ impl Window {
     #[template_callback]
     fn choose_source(&self, button: &Button) {
         let filter = lib::build_file_filter(&["*", "*.iso", "*.nds"]);
-        let parent = self.parent_window.borrow().clone();
+        let obj = &self.obj();
+
+        let parent = obj.upcast_ref::<gtk::ApplicationWindow>();
 
         let file_chooser = lib::build_file_chooser(
             "Select the ROM file to be patched:",
             FileChooserAction::Open,
-            &parent,
+            parent,
             &filter,
         );
+
+        file_chooser.connect_response(move |chooser, response| {
+            if response == ResponseType::Accept {
+                if let Some(file) = chooser.file() {
+                    println!("File : {file}");
+                }
+            }
+            chooser.destroy();
+        });
 
         file_chooser.show();
     }
@@ -62,9 +73,9 @@ impl ObjectSubclass for Window {
     type Type = super::Window;
     type ParentType = gtk::ApplicationWindow;
 
-    fn class_init(class: &mut Self::Class) {
-        class.bind_template();
-        class.bind_template_callbacks();
+    fn class_init(klass: &mut Self::Class) {
+        klass.bind_template();
+        klass.bind_template_callbacks();
     }
 
     fn instance_init(obj: &InitializingObject<Self>) {
@@ -78,7 +89,6 @@ impl ObjectImpl for Window {
         self.parent_constructed();
 
         let obj = self.obj();
-        obj.setup_parent_window();
         obj.setup_files();
     }
 }
