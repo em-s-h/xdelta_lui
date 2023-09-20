@@ -1,26 +1,17 @@
-mod lib;
-mod window;
-
-use gtk::{gio, glib, prelude::*};
+use gtk::{glib, prelude::*};
 use std::process::{self, Command};
-use window::Window;
+
+mod lib;
+mod ui;
 
 const APP_ID: &str = "com.github.em-s-h.xdelta-lui";
 
 fn main() -> glib::ExitCode {
-    // Register and include resources
-    gio::resources_register_include!("xdelta-lui.gresource")
-        .expect("Failed to register resources.");
+    verify_xdelta();
 
     let app = adw::Application::builder().application_id(APP_ID).build();
-    app.connect_activate(build_ui);
+    app.connect_activate(ui::build_ui);
     app.run()
-}
-
-fn build_ui(app: &adw::Application) {
-    verify_xdelta();
-    let window = Window::new(app);
-    window.present();
 }
 
 /// Verify if xdelta3 is installed.

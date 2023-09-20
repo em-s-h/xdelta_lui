@@ -1,5 +1,12 @@
-use gtk::{prelude::*, FileChooserAction, FileChooserNative, FileFilter};
 use std::process::Command;
+
+const BUFFER_SIZE: u32 = 1000000000;
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Mode {
+    Create,
+    Apply,
+}
 
 #[derive(Default, Debug)]
 pub struct Files {
@@ -8,13 +15,15 @@ pub struct Files {
     pub output: String,
 }
 
-// #[derive(Debug)]
-// pub enum Mode {
-//     Create,
-//     Apply,
-// }
-
-const BUFFER_SIZE: u32 = 1000000000;
+impl Files {
+    pub fn new() -> Self {
+        Self {
+            source: "".to_string(),
+            target: "".to_string(),
+            output: "".to_string(),
+        }
+    }
+}
 
 pub fn call_xdelta(args: &[&str]) {
     Command::new("xdelta3")
@@ -22,44 +31,6 @@ pub fn call_xdelta(args: &[&str]) {
         .spawn()
         .expect("Unable to run 'xdelta3 {args}'");
 }
-
-pub fn build_file_chooser(
-    title: &str,
-    action: FileChooserAction,
-    parent: &impl IsA<gtk::Window>,
-    filter: &FileFilter,
-) -> FileChooserNative {
-    let accept_label = if action == FileChooserAction::Open {
-        "Open".to_string()
-    } else if action == FileChooserAction::Save {
-        "Save".to_string()
-    } else {
-        "Select".to_string()
-    };
-
-    FileChooserNative::builder()
-        .title(title)
-        .action(action)
-        .transient_for(parent)
-        .filter(&filter)
-        .visible(true)
-        .accept_label(accept_label)
-        .build()
-}
-
-pub fn build_file_filter(patterns: &[&str]) -> FileFilter {
-    let filter = FileFilter::new();
-
-    for pat in patterns.iter() {
-        filter.add_pattern(pat);
-    }
-
-    filter
-}
-
-// fn build_progress_window(message: &str) {
-//     println!("{:?}", message);
-// }
 
 // fn get_file_name(path: &str) -> &str {
 //     unimplemented!()
