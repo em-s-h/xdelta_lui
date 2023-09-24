@@ -8,23 +8,6 @@ pub enum Mode {
     Apply,
 }
 
-#[derive(Default, Debug)]
-pub struct Files {
-    pub source: String,
-    pub target: String,
-    pub output: String,
-}
-
-impl Files {
-    pub fn new() -> Self {
-        Self {
-            source: "".to_string(),
-            target: "".to_string(),
-            output: "".to_string(),
-        }
-    }
-}
-
 pub fn call_xdelta(args: &[&str]) {
     Command::new("xdelta3")
         .args(args)

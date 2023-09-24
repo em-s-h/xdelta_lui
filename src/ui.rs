@@ -1,69 +1,101 @@
-use crate::lib::{Files, Mode};
+use crate::lib::Mode;
+use glib::clone;
 use gtk::{
-    prelude::*, ApplicationWindow, Box, Button, FileChooserAction, FileChooserNative, FileFilter,
-    Label, Notebook, Orientation,
+    glib, prelude::*, ApplicationWindow, Box, Button, FileChooserAction, FileChooserDialog,
+    FileChooserNative, FileFilter, Label, Notebook, Orientation, ResponseType,
 };
-use std::{cell::Cell, rc::Rc};
+use std::{
+    borrow::BorrowMut,
+    cell::{Cell, RefCell},
+    ops::DerefMut,
+    rc::Rc,
+    sync::{Arc, Mutex},
+};
 
 mod callbacks;
 
 pub fn build_ui(app: &adw::Application) {
-    let files = Rc::new(Cell::new(Files::new()));
+    let window = Rc::new(
+        ApplicationWindow::builder()
+            .application(app)
+            .title("XDelta - LUI")
+            .build(),
+    );
 
-    let notebook = create_notebook();
+    let notebook = Notebook::builder().show_tabs(true).build();
+    let source_file = Arc::new(Mutex::new(String::new()));
+    // let output_file = Rc::new(Cell::new(String::new()));
+    // let target_file = Rc::new(Cell::new(String::new()));
 
-    let window = ApplicationWindow::builder()
-        .application(app)
-        .title("XDelta - LUI")
-        .child(&notebook)
-        .build();
+    for i in 0..2 {
+        let mode = if i == 0 { Mode::Apply } else { Mode::Create };
+        let page_content = build_box();
 
+        let label = if mode == Mode::Apply {
+            Label::new(Some("Apply patch"))
+        } else {
+            Label::new(Some("Create patch"))
+        };
+
+        // Create buttons
+        for b in 0..4 {
+            let button = build_button(&mode, b);
+            // let source_file_clone = source_file.clone();
+
+            match b {
+                0 => {
+                    button.connect_clicked(
+                        clone!(@strong source_file, @strong window => move |b| {
+                            let selected_file = callbacks::choose_source(&b, Rc::clone(&window));
+
+                            let mut source_file =
+                                source_file.lock().expect("Unable to lock mutex");
+
+                            *source_file = selected_file;
+                            println!("source file: {:?}", source_file);
+
+                        }),
+                    );
+                }
+
+                1 => {
+                    if mode == Mode::Apply {
+                        button.connect_clicked(|_| callbacks::choose_output());
+                    } else {
+                        button.connect_clicked(|_| callbacks::choose_target());
+                    }
+                }
+
+                2 => {
+                    if mode == Mode::Apply {
+                        button.connect_clicked(|_| callbacks::choose_target());
+                    } else {
+                        button.connect_clicked(|_| callbacks::choose_output());
+                    }
+                }
+
+                3 => {
+                    if mode == Mode::Apply {
+                        button.connect_clicked(|_| callbacks::apply_patch());
+                    } else {
+                        button.connect_clicked(|_| callbacks::create_patch());
+                    }
+                }
+                _ => (),
+            };
+
+            page_content.append(&button);
+        }
+
+        notebook.append_page(&page_content, Some(&label));
+    }
+
+    window.set_child(Some(&notebook));
     window.present();
 }
 
-fn create_notebook() -> Notebook {
-    let apply_patch_page = create_page(Mode::Apply);
-    let create_patch_page = create_page(Mode::Create);
-
-    let notebook = Notebook::builder()
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .show_tabs(true)
-        .show_border(true)
-        .build();
-
-    notebook.append_page(&apply_patch_page.0, Some(&apply_patch_page.1));
-    notebook.append_page(&create_patch_page.0, Some(&create_patch_page.1));
-
-    notebook
-}
-
-fn create_page(mode: Mode) -> (Box, Label) {
-    let page_box = Box::builder()
-        .orientation(Orientation::Vertical)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build();
-
-    let label;
-
-    if mode == Mode::Apply {
-        create_buttons(mode, &page_box);
-        label = Label::new(Some("Apply patch"));
-    } else {
-        create_buttons(mode, &page_box);
-        label = Label::new(Some("Create patch"));
-    }
-
-    (page_box, label)
-}
-
-fn create_buttons(mode: Mode, container: &Box) {
-    let labels = if mode == Mode::Apply {
+fn build_button(mode: &Mode, button_index: usize) -> Button {
+    let labels = if mode == &Mode::Apply {
         vec!["ROM file:", "Patch file:", "Output file:", "Apply patch"]
     } else {
         vec![
@@ -74,73 +106,48 @@ fn create_buttons(mode: Mode, container: &Box) {
         ]
     };
 
-    for i in 0..4 {
-        let button = Button::builder()
-            .label(labels[i])
-            .margin_top(12)
-            .margin_bottom(12)
-            .margin_start(12)
-            .margin_end(12)
-            .build();
-
-        match i {
-            0 => {
-                button.connect_clicked(|_| callbacks::choose_source());
-            }
-
-            1 => {
-                if mode == Mode::Apply {
-                    button.connect_clicked(|_| callbacks::choose_output());
-                } else {
-                    button.connect_clicked(|_| callbacks::choose_target());
-                }
-            }
-
-            2 => {
-                if mode == Mode::Apply {
-                    button.connect_clicked(|_| callbacks::choose_target());
-                } else {
-                    button.connect_clicked(|_| callbacks::choose_output());
-                }
-            }
-
-            3 => {
-                if mode == Mode::Apply {
-                    button.connect_clicked(|_| callbacks::apply_patch());
-                } else {
-                    button.connect_clicked(|_| callbacks::create_patch());
-                }
-            }
-            _ => (),
-        };
-
-        container.append(&button);
-    }
+    Button::builder()
+        .label(labels[button_index])
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build()
 }
 
-fn build_file_chooser(
+fn build_box() -> Box {
+    Box::builder()
+        .orientation(Orientation::Vertical)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build()
+}
+
+fn build_file_chooser<W: IsA<gtk::Window>>(
     title: &str,
     action: FileChooserAction,
-    parent: &impl IsA<gtk::Window>,
-    filter: &FileFilter,
-) -> FileChooserNative {
+    parent: Rc<W>,
+) -> FileChooserDialog {
     //
     let accept_label = if action == FileChooserAction::Open {
-        "Open".to_string()
+        "Select"
     } else if action == FileChooserAction::Save {
-        "Save".to_string()
+        "Save"
     } else {
-        "Select".to_string()
+        "Open"
     };
 
-    FileChooserNative::builder()
-        .title(title)
-        .action(action)
-        .transient_for(parent)
-        .filter(&filter)
-        .visible(true)
-        .accept_label(accept_label)
-        .build()
+    FileChooserDialog::new(
+        Some(title),
+        Some(&*parent),
+        action,
+        &[
+            (accept_label, ResponseType::Accept),
+            ("Cancel", ResponseType::Cancel),
+        ],
+    )
 }
 
 fn build_file_filter(patterns: &[&str]) -> FileFilter {
