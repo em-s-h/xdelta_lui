@@ -1,18 +1,20 @@
-use crate::lib::Mode;
 use glib::clone;
 use gtk::{
     glib, prelude::*, ApplicationWindow, Box, Button, FileChooserAction, FileChooserDialog,
-    FileChooserNative, FileFilter, Label, Notebook, Orientation, ResponseType,
+    FileFilter, Label, Notebook, Orientation, ResponseType,
 };
-use std::{
-    borrow::BorrowMut,
-    cell::{Cell, RefCell},
-    ops::DerefMut,
-    rc::Rc,
-    sync::{Arc, Mutex},
-};
+use std::{cell::Cell, rc::Rc};
 
 mod callbacks;
+
+const ROM_PREFIXES: &[&str] = &["*.nes", "*.gb", "*.sfc", "*.gba", "*.nds", "*.iso"];
+const PATCH_PREFIX: &[&str] = &["*.xdelta"];
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Mode {
+    Create,
+    Apply,
+}
 
 pub fn build_ui(app: &adw::Application) {
     let window = Rc::new(
@@ -23,62 +25,125 @@ pub fn build_ui(app: &adw::Application) {
     );
 
     let notebook = Notebook::builder().show_tabs(true).build();
-    let source_file = Arc::new(Mutex::new(String::new()));
-    // let output_file = Rc::new(Cell::new(String::new()));
-    // let target_file = Rc::new(Cell::new(String::new()));
+    let source_file = Rc::new(Cell::new(String::new()));
+    let output_file = Rc::new(Cell::new(String::new()));
+    let target_file = Rc::new(Cell::new(String::new()));
 
     for i in 0..2 {
-        let mode = if i == 0 { Mode::Apply } else { Mode::Create };
-        let page_content = build_box();
+        let mode;
+        let label;
 
-        let label = if mode == Mode::Apply {
-            Label::new(Some("Apply patch"))
+        if i == 0 {
+            label = Label::new(Some("Apply patch"));
+            mode = Mode::Apply;
         } else {
-            Label::new(Some("Create patch"))
+            label = Label::new(Some("Create patch"));
+            mode = Mode::Create;
         };
+        let page_content = build_box();
 
         // Create buttons
         for b in 0..4 {
             let button = build_button(&mode, b);
-            // let source_file_clone = source_file.clone();
 
             match b {
                 0 => {
                     button.connect_clicked(
                         clone!(@strong source_file, @strong window => move |b| {
-                            let selected_file = callbacks::choose_source(&b, Rc::clone(&window));
-
-                            let mut source_file =
-                                source_file.lock().expect("Unable to lock mutex");
-
-                            *source_file = selected_file;
-                            println!("source file: {:?}", source_file);
-
+                            callbacks::open_file_chooser(
+                                &b,
+                                Rc::clone(&window),
+                                Rc::clone(&source_file),
+                                FileChooserAction::Open,
+                                ROM_PREFIXES,
+                            );
                         }),
                     );
                 }
 
                 1 => {
+                    // target: xdelta file
                     if mode == Mode::Apply {
-                        button.connect_clicked(|_| callbacks::choose_output());
+                        button.connect_clicked(
+                            clone!(@strong target_file, @strong window => move |b| {
+                                callbacks::open_file_chooser(
+                                    &b,
+                                    Rc::clone(&window),
+                                    Rc::clone(&target_file),
+                                    FileChooserAction::Open,
+                                    PATCH_PREFIX
+                                );
+                            }),
+                        );
+                    // output: modified rom
                     } else {
-                        button.connect_clicked(|_| callbacks::choose_target());
+                        button.connect_clicked(
+                            clone!(@strong output_file, @strong window => move |b| {
+                                callbacks::open_file_chooser(
+                                    &b,
+                                    Rc::clone(&window),
+                                    Rc::clone(&output_file),
+                                    FileChooserAction::Open,
+                                    ROM_PREFIXES
+                                );
+                            }),
+                        );
                     }
                 }
 
                 2 => {
+                    // output: modified rom
                     if mode == Mode::Apply {
-                        button.connect_clicked(|_| callbacks::choose_target());
+                        button.connect_clicked(
+                            clone!(@strong output_file, @strong window => move |b| {
+                                callbacks::open_file_chooser(
+                                    &b,
+                                    Rc::clone(&window),
+                                    Rc::clone(&output_file),
+                                    FileChooserAction::Save,
+                                    ROM_PREFIXES
+                                );
+                            }),
+                        );
+                    // target xdelta file
                     } else {
-                        button.connect_clicked(|_| callbacks::choose_output());
+                        button.connect_clicked(
+                            clone!(@strong target_file, @strong window => move |b| {
+                                callbacks::open_file_chooser(
+                                    &b,
+                                    Rc::clone(&window),
+                                    Rc::clone(&target_file),
+                                    FileChooserAction::Save,
+                                    PATCH_PREFIX
+                                );
+                            }),
+                        );
                     }
                 }
 
                 3 => {
                     if mode == Mode::Apply {
-                        button.connect_clicked(|_| callbacks::apply_patch());
+                        button.connect_clicked(
+                            clone!(@strong source_file, @strong target_file, @strong output_file =>
+                                move |_| callbacks::call_xdelta(
+                                    Rc::clone(&source_file),
+                                    Rc::clone(&target_file),
+                                    Rc::clone(&output_file),
+                                    Mode::Apply
+                                );
+                            ),
+                        );
                     } else {
-                        button.connect_clicked(|_| callbacks::create_patch());
+                        button.connect_clicked(
+                            clone!(@strong source_file, @strong target_file, @strong output_file =>
+                                move |_| callbacks::call_xdelta(
+                                    Rc::clone(&source_file),
+                                    Rc::clone(&target_file),
+                                    Rc::clone(&output_file),
+                                    Mode::Create
+                                );
+                            ),
+                        );
                     }
                 }
                 _ => (),
@@ -127,24 +192,16 @@ fn build_box() -> Box {
 
 fn build_file_chooser<W: IsA<gtk::Window>>(
     title: &str,
-    action: FileChooserAction,
     parent: Rc<W>,
+    action: FileChooserAction,
 ) -> FileChooserDialog {
     //
-    let accept_label = if action == FileChooserAction::Open {
-        "Select"
-    } else if action == FileChooserAction::Save {
-        "Save"
-    } else {
-        "Open"
-    };
-
     FileChooserDialog::new(
         Some(title),
         Some(&*parent),
         action,
         &[
-            (accept_label, ResponseType::Accept),
+            ("Select", ResponseType::Accept),
             ("Cancel", ResponseType::Cancel),
         ],
     )

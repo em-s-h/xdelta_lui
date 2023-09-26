@@ -1,7 +1,6 @@
 use gtk::{glib, prelude::*};
 use std::process::{self, Command};
 
-mod lib;
 mod ui;
 
 const APP_ID: &str = "com.github.em-s-h.xdelta-lui";
