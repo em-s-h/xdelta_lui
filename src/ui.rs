@@ -1,20 +1,22 @@
 use glib::clone;
 use gtk::{
-    glib, prelude::*, ApplicationWindow, Box, Button, FileChooserAction, FileChooserDialog,
-    FileFilter, Label, Notebook, Orientation, ResponseType,
+    glib, prelude::*, ApplicationWindow, Box, Button, ButtonsType, DialogFlags, FileChooserAction,
+    FileChooserDialog, FileFilter, Label, MessageDialog, MessageType, Notebook, Orientation,
+    ResponseType,
 };
 use std::{cell::Cell, rc::Rc};
 
+/// Module for handling callbacks
 mod callbacks;
 
-const ROM_PREFIXES: &[&str] = &["*.nes", "*.gb", "*.sfc", "*.gba", "*.nds", "*.iso"];
-const PATCH_PREFIX: &[&str] = &["*.xdelta"];
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum Mode {
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub enum Operation {
     Create,
     Apply,
 }
+
+const ROM_PREFIXES: &[&str] = &["*.nes", "*.gb", "*.sfc", "*.gba", "*.nds", "*.iso"];
+const PATCH_PREFIX: &[&str] = &["*.xdelta"];
 
 pub fn build_ui(app: &adw::Application) {
     let window = Rc::new(
@@ -30,21 +32,21 @@ pub fn build_ui(app: &adw::Application) {
     let target_file = Rc::new(Cell::new(String::new()));
 
     for i in 0..2 {
-        let mode;
+        let operation;
         let label;
 
         if i == 0 {
             label = Label::new(Some("Apply patch"));
-            mode = Mode::Apply;
+            operation = Operation::Apply;
         } else {
             label = Label::new(Some("Create patch"));
-            mode = Mode::Create;
+            operation = Operation::Create;
         };
         let page_content = build_box();
 
         // Create buttons
         for b in 0..4 {
-            let button = build_button(&mode, b);
+            let button = build_button(&operation, b);
 
             match b {
                 0 => {
@@ -63,7 +65,7 @@ pub fn build_ui(app: &adw::Application) {
 
                 1 => {
                     // target: xdelta file
-                    if mode == Mode::Apply {
+                    if operation == Operation::Apply {
                         button.connect_clicked(
                             clone!(@strong target_file, @strong window => move |b| {
                                 callbacks::open_file_chooser(
@@ -93,7 +95,7 @@ pub fn build_ui(app: &adw::Application) {
 
                 2 => {
                     // output: modified rom
-                    if mode == Mode::Apply {
+                    if operation == Operation::Apply {
                         button.connect_clicked(
                             clone!(@strong output_file, @strong window => move |b| {
                                 callbacks::open_file_chooser(
@@ -105,7 +107,7 @@ pub fn build_ui(app: &adw::Application) {
                                 );
                             }),
                         );
-                    // target xdelta file
+                    // target: xdelta file
                     } else {
                         button.connect_clicked(
                             clone!(@strong target_file, @strong window => move |b| {
@@ -122,30 +124,22 @@ pub fn build_ui(app: &adw::Application) {
                 }
 
                 3 => {
-                    if mode == Mode::Apply {
-                        button.connect_clicked(
-                            clone!(@strong source_file, @strong target_file, @strong output_file =>
-                                move |_| callbacks::call_xdelta(
-                                    Rc::clone(&source_file),
-                                    Rc::clone(&target_file),
-                                    Rc::clone(&output_file),
-                                    Mode::Apply
-                                );
-                            ),
-                        );
-                    } else {
-                        button.connect_clicked(
-                            clone!(@strong source_file, @strong target_file, @strong output_file =>
-                                move |_| callbacks::call_xdelta(
-                                    Rc::clone(&source_file),
-                                    Rc::clone(&target_file),
-                                    Rc::clone(&output_file),
-                                    Mode::Create
-                                );
-                            ),
-                        );
-                    }
+                    button.connect_clicked(clone!(
+                        @strong window,
+                        @strong source_file,
+                        @strong target_file,
+                        @strong output_file,
+                        @strong operation
+                            => move |_| callbacks::call_xdelta(
+                                Rc::clone(&window),
+                                Rc::clone(&source_file),
+                                Rc::clone(&target_file),
+                                Rc::clone(&output_file),
+                                &operation
+                            );
+                    ));
                 }
+
                 _ => (),
             };
 
@@ -159,8 +153,8 @@ pub fn build_ui(app: &adw::Application) {
     window.present();
 }
 
-fn build_button(mode: &Mode, button_index: usize) -> Button {
-    let labels = if mode == &Mode::Apply {
+fn build_button(operation: &Operation, button_index: usize) -> Button {
+    let labels = if operation == &Operation::Apply {
         vec!["ROM file:", "Patch file:", "Output file:", "Apply patch"]
     } else {
         vec![
@@ -190,8 +184,8 @@ fn build_box() -> Box {
         .build()
 }
 
-fn build_file_chooser<W: IsA<gtk::Window>>(
-    title: &str,
+pub fn build_file_chooser<W: IsA<gtk::Window>>(
+    title: String,
     parent: Rc<W>,
     action: FileChooserAction,
 ) -> FileChooserDialog {
@@ -207,7 +201,7 @@ fn build_file_chooser<W: IsA<gtk::Window>>(
     )
 }
 
-fn build_file_filter(patterns: &[&str]) -> FileFilter {
+pub fn build_file_filter(patterns: &[&str]) -> FileFilter {
     let filter = FileFilter::new();
 
     for pat in patterns.iter() {
@@ -217,6 +211,25 @@ fn build_file_filter(patterns: &[&str]) -> FileFilter {
     filter
 }
 
-// fn build_progress_window(message: &str) {
-//     println!("{:?}", message);
-// }
+pub fn build_dialog<W: IsA<gtk::Window>>(
+    parent: Rc<W>,
+    message_type: MessageType,
+    message: &str,
+) -> MessageDialog {
+    let title = if message_type == MessageType::Error {
+        "Error!"
+    } else {
+        "Success!"
+    };
+
+    let dialog = MessageDialog::new(
+        Some(&*parent),
+        DialogFlags::MODAL,
+        message_type,
+        ButtonsType::Ok,
+        title,
+    );
+
+    dialog.set_secondary_text(Some(message));
+    dialog
+}

@@ -1,6 +1,7 @@
 use gtk::{glib, prelude::*};
-use std::process::{self, Command};
+use std::process::Command;
 
+/// Module for building ui elements
 mod ui;
 
 const APP_ID: &str = "com.github.em-s-h.xdelta-lui";
@@ -13,15 +14,9 @@ fn main() -> glib::ExitCode {
     app.run()
 }
 
-/// Verify if xdelta3 is installed.
 fn verify_xdelta() {
-    let status = Command::new("xdelta3")
-        .arg("-V")
-        .status()
-        .expect("Unable to execute process 'xdelta3 -V");
-
-    if status.code().unwrap_or(0) == 127 {
-        eprintln!("xdelta3 is not installed! Please install it!");
-        process::exit(1);
-    }
+    Command::new("xdelta3")
+        .arg("-q")
+        .spawn()
+        .expect("Xdelta3 is not installed! Please install it!");
 }

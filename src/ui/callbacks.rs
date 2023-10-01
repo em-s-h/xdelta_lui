@@ -1,6 +1,6 @@
-use super::Mode;
+use crate::ui::{self, Operation};
 use glib::clone;
-use gtk::{glib, prelude::*, Button, FileChooserAction, ResponseType};
+use gtk::{glib, prelude::*, Button, FileChooserAction, MessageType, ResponseType};
 use std::{cell::Cell, process::Command, rc::Rc};
 
 pub fn open_file_chooser<W: IsA<gtk::Window>>(
@@ -12,8 +12,8 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
 ) {
     let title = format!("Select {}", button.label().unwrap());
 
-    let file_chooser = super::build_file_chooser(&title, parent, action);
-    let filter = super::build_file_filter(filters);
+    let file_chooser = ui::build_file_chooser(title, parent, action);
+    let filter = ui::build_file_filter(filters);
 
     file_chooser.connect_response(clone!(@strong file, @strong button => move |obj, r| {
         if r == ResponseType::Accept {
@@ -39,24 +39,56 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
     file_chooser.show();
 }
 
-pub fn call_xdelta(
+pub fn call_xdelta<W: IsA<gtk::Window>>(
+    parent: Rc<W>,
     source: Rc<Cell<String>>,
     target: Rc<Cell<String>>,
     output: Rc<Cell<String>>,
-    mode: Mode,
+    operation: &Operation,
 ) {
     let source = &source.take();
     let target = &target.take();
     let output = &output.take();
 
-    let args = if mode == Mode::Apply {
-        ["-d", "-s", &source, &target, &output]
+    let args = if operation == &Operation::Apply {
+        ["-dfs", &source, &target, &output]
     } else {
-        ["-e", "-s", &source, &output, &target]
+        ["-efs", &source, &output, &target]
     };
 
-    Command::new("xdelta3")
+    let output = Command::new("xdelta3")
         .args(args)
-        .spawn()
+        .output()
         .expect("Unable to run 'xdelta3 {args}'");
+
+    let message_type;
+    let message;
+
+    if output.status.success() {
+        message_type = MessageType::Info;
+
+        message = if operation == &Operation::Apply {
+            "ROM successfully patched!".to_string()
+        } else {
+            "Patch successfully created!".to_string()
+        }
+    } else {
+        message_type = MessageType::Error;
+        let stderr = String::from_utf8(output.stderr).unwrap().trim().to_string();
+
+        message = if stderr.contains("empty string") {
+            format!(
+                "Please select all of the required files, \nxdelta3 error: {:?}",
+                stderr
+            )
+        } else {
+            format!("An error has occurred, \nxdelta3 error: {:?}", stderr)
+        }
+    }
+
+    let dialog = ui::build_dialog(parent, message_type, &message);
+    dialog.connect_response(|obj, _| {
+        obj.destroy();
+    });
+    dialog.show();
 }
