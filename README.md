@@ -35,8 +35,7 @@ Make sure the version you are installing is bellow `4.10`
 
 After installing the dependencies:
 
-1. Download the [latest](https://github.com/em-s-h/xdelta_lui/releases/tag/release/xdelta_lui)
-binary file in the releases page;
+1. Download the latest binary file in the releases page;
 
 2. Give execution permission to the binary file by executing `chmod 555 path/to/binary` in a
 terminal or altering the properties of the file in a file explorer.
