@@ -1,7 +1,7 @@
 # Xdelta - LUI
 
 Xdelta - Linux User Interface <br>
-A Linux User Interface for Xdelta3
+A Linux User Interface for patching ROMs with xdelta3
 
 ## Installation
 
