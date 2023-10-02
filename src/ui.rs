@@ -124,6 +124,7 @@ pub fn build_ui(app: &adw::Application) {
                 }
 
                 3 => {
+                    button.add_css_class("suggested-action");
                     button.connect_clicked(clone!(
                         @strong window,
                         @strong source_file,
