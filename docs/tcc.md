@@ -79,10 +79,10 @@ only applies patches.
 
 ---
 
-| Task                                  | Duration          | Start       | End         |
-| ------------------------------------- | ----------------- | ----------- | ----------- |
-| [TCC](#TCC)                           | 37 days & 5 hours | 04/06/2023  | ~16/10/2023 |
-| [Development](#development)           | 246 days          | 04/06/2023  | 01/11/2023  |
+| Task                                  | Duration          | Start    | End       |
+| ------------------------------------- | :---------------: | :------: | :-------: |
+| [TCC](#TCC)                           | 37 days & 5 hours | 04/06/23 | ~16/10/23 |
+| [Development](#development)           | 246 days          | 04/06/23 | 01/11/23  |
 
 
 
@@ -90,17 +90,17 @@ only applies patches.
 
 ---
 
-| Task                                                         | Duration | Start       | End         |
-| ------------------------------------------------------------ | -------- | ----------- | ----------- |
-| Chronogram                                                   | 8 days   | 04/06/2023  | 11/06/2023  |
-| Intro + theme + objective + justification + market research  | 2 hours  | 08/06/2023  | 08/06/2023  |
-| Member roles + necessary knowledge                           | 1 hour   | 08/06/2023  | 08/06/2023  |
-| Methodology + tools used                                     | 2 hours  | 01/09/2023  | 01/09/2023  |
-| Logo                                                         | 2 days   | 17/06/2023  | 18/06/2023  |
-| Prototype screen layout                                      | 5 days   | 23/06/2023  | 28/06/2023  |
-| Planning                                                     | 5 days   | 29/08/2023  | 03/09/2023  |
-| Results obtained                                             | 5 days   | ~08/10/2023 | ~13/10/2023 |
-| Conclusion                                                   | 6 days   | ~10/10/2023 | ~16/10/2023 |
+| Task                                                         | Duration | Start     | End       |
+| ------------------------------------------------------------ | :------: | :-------: | :-------: |
+| Chronogram                                                   | 8 days   | 04/06/23  | 11/06/23  |
+| Intro + theme + objective + justification + market research  | 2 hours  | 08/06/23  | 08/06/23  |
+| Member roles + necessary knowledge                           | 1 hour   | 08/06/23  | 08/06/23  |
+| Methodology + tools used                                     | 2 hours  | 01/09/23  | 01/09/23  |
+| Logo                                                         | 2 days   | 17/06/23  | 18/06/23  |
+| Prototype screen layout                                      | 5 days   | 23/06/23  | 28/06/23  |
+| Planning                                                     | 5 days   | 29/08/23  | 03/09/23  |
+| Results obtained                                             | 5 days   | ~08/10/23 | ~13/10/23 |
+| Conclusion                                                   | 6 days   | ~10/10/23 | ~16/10/23 |
 
 
 
@@ -108,12 +108,12 @@ only applies patches.
 
 ---
 
-| Task                  | Duration | Start       | End        |
-| --------------------- | -------- | ----------- | ---------- |
-| Study Rust + Rust-gtk | 81 days  | 04/06/2023  | 24/08/2023 |
-| Backend               | 60 days  | 29/08/2023  | 31/10/2023 |
-| Frontend              | 60 days  | 24/08/2023  | 31/10/2023 |
-| Testing               | 45 days  | 01/09/2023  | 31/10/2023 |
+| Task                  | Duration | Start     | End      |
+| --------------------- | :------: | :-------: | :------: |
+| Study Rust + Rust-gtk | 81 days  | 04/06/23  | 24/08/23 |
+| Backend               | 60 days  | 29/08/23  | 31/10/23 |
+| Frontend              | 60 days  | 24/08/23  | 31/10/23 |
+| Testing               | 45 days  | 01/09/23  | 31/10/23 |
 
 
 

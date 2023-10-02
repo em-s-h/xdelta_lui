@@ -1,11 +1,8 @@
 [package]
 name = "xdelta_lui"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [dependencies]
 adw = { version = "=0.4.4", package = "libadwaita", features = ["v1_1", "gtk_v4_6"] }
 gtk = { version = "0.6.6", package = "gtk4", features = ["v4_6"] }
-
-[build-dependencies]
-glib-build-tools = "0.18.0"
