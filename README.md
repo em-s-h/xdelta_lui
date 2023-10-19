@@ -1,7 +1,7 @@
 # Xdelta - LUI
 
-Xdelta - Linux User Interface <br>
-A Linux User Interface for patching ROMs with xdelta3
+Xdelta - Linux User Interface <br> 
+A Graphical User Interface for patching ROMs/creating patches with xdelta3.
 
 ## Installation
 
@@ -11,23 +11,20 @@ A Linux User Interface for patching ROMs with xdelta3
 
 <!-- {{{ -->
 
-Before intalling Xdelta3 - LUI you'll need to install the following dependencies:
+To run Xdelta3 - LUI you'll need to install the following dependencies:
 
-#### [`xdelta3`](https://github.com/jmacd/xdelta)
+- [xdelta3](https://github.com/jmacd/xdelta)
+- [gtk4](https://www.gtk.org/docs/installations/)
 
-To install it on Ubuntu and derivatives run the following command in a terminal:
+On Ubuntu:
 ```shell
-sudo apt install xdelta3
+sudo apt install xdelta3 libgtk-4-1
 ```
 
-#### [`gtk4`](https://github.com/jmacd/xdelta)
-
-To install it on Ubuntu and derivatives run the following command in a terminal:
+On Arch linux:
 ```shell
-sudo apt install libgtk-4-1
+sudo pacman -S xdelta3 gtk4
 ```
-
-Make sure the version you are installing is bellow `4.10`
 
 <!-- }}} -->
 
@@ -35,10 +32,12 @@ Make sure the version you are installing is bellow `4.10`
 
 After installing the dependencies:
 
-1. Download the latest binary file in the releases page;
+1. Download the latest binary from the [releases](https://github.com/em-s-h/xdelta_lui/releases) page;
+    - If your gtk4 version is bellow 4.10 you'll have to download the binary from this version
+    [v1.0.1](https://github.com/em-s-h/xdelta_lui/releases/tag/v1.0.1).
 
-2. Give execution permission to the binary file by executing `chmod 555 path/to/binary` in a
-terminal or altering the properties of the file in a file explorer.
+2. Make the binary executable by either running `chmod 555 path/to/binary` in a terminal, or by
+altering its properties in a file explorer.
 
 <!-- }}} -->
 
@@ -47,11 +46,11 @@ terminal or altering the properties of the file in a file explorer.
 <!-- {{{ -->
 
 To build from source: 
-1. Install the dependencies above;
-2. Download the [source code](https://github.com/em-s-h/xdelta_lui/archive/refs/tags/release.tar.gz)
-and extract it;
 
-3. Run `cargo b -r` inside the extracted folder to build a release binary at `target/release/xdelta_lui`
+1. Install the dependencies above + [cargo](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html);
+
+2. Clone the repository with `git clone https://github.com/em-s-h/xdelta_lui.git`;
+
+3. Run `cargo b -r` inside the repository to build a release binary at `target/release/xdelta_lui`
 
 <!-- }}} -->
-
