@@ -15,8 +15,8 @@ fn main() -> glib::ExitCode {
     app.connect_activate(ui::build_ui);
     app.connect_startup(verify_xdelta);
     app.run()
-    // }}}
 }
+// }}}
 
 fn verify_xdelta(app: &adw::Application) {
     // {{{
@@ -49,5 +49,5 @@ fn verify_xdelta(app: &adw::Application) {
     dialog.choose(Some(&*parent), Some(&Cancellable::new()), |_| {
         process::exit(1)
     });
-    // }}}
 }
+// }}}

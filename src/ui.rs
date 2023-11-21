@@ -1,7 +1,7 @@
 use glib::clone;
 use gtk::{
-    glib, prelude::*, ApplicationWindow, Box, Button, FileChooserAction, FileFilter, Label,
-    Notebook, Orientation,
+    glib, prelude::*, ApplicationWindow, Box, Button, FileChooserAction, Label, Notebook,
+    Orientation,
 };
 use std::{cell::Cell, rc::Rc};
 
@@ -15,7 +15,7 @@ pub enum Operation {
 }
 
 const ROM_PREFIXES: &[&str] = &["*.nes", "*.gb", "*.sfc", "*.gba", "*.nds", "*.3ds", "*.iso"];
-const PATCH_PREFIX: &[&str] = &["*.xdelta"];
+const PATCH_PREFIX: &[&str] = &["*.xdelta", "*.xdelta3"];
 
 pub fn build_ui(app: &adw::Application) {
     // {{{
@@ -43,14 +43,20 @@ pub fn build_ui(app: &adw::Application) {
             label = Label::new(Some("Create patch"));
             operation = Operation::Create;
         };
-        let page_content = build_box();
+        let page_content = Box::builder()
+            .orientation(Orientation::Vertical)
+            .margin_top(12)
+            .margin_bottom(12)
+            .margin_start(12)
+            .margin_end(12)
+            .build();
 
         // Create buttons {{{
         for b in 0..4 {
             let button = build_button(&operation, b);
 
             match b {
-                // source {{{
+                // source: original rom {{{
                 0 => {
                     button.connect_clicked(
                         clone!(@strong source_file, @strong window => move |b| {
@@ -159,8 +165,8 @@ pub fn build_ui(app: &adw::Application) {
 
     window.set_child(Some(&notebook));
     window.present();
-    // }}}
 }
+// }}}
 
 fn build_button(operation: &Operation, button_index: usize) -> Button {
     // {{{
@@ -182,29 +188,5 @@ fn build_button(operation: &Operation, button_index: usize) -> Button {
         .margin_start(12)
         .margin_end(12)
         .build()
-    // }}}
 }
-
-fn build_box() -> Box {
-    // {{{
-    Box::builder()
-        .orientation(Orientation::Vertical)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build()
-    // }}}
-}
-
-pub fn build_file_filter(patterns: &[&str]) -> FileFilter {
-    // {{{
-    let filter = FileFilter::new();
-
-    for pat in patterns.iter() {
-        filter.add_pattern(pat);
-    }
-
-    filter
-    // }}}
-}
+// }}}

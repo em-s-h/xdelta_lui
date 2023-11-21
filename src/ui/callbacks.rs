@@ -1,7 +1,7 @@
-use crate::ui::{self, Operation};
+use crate::ui::Operation;
 use gio::{Cancellable, File};
 use glib::{clone, Error};
-use gtk::{gio, glib, prelude::*, AlertDialog, Button, FileChooserAction, FileDialog};
+use gtk::{gio, glib, prelude::*, AlertDialog, Button, FileChooserAction, FileDialog, FileFilter};
 use std::{cell::Cell, process::Command, rc::Rc};
 
 pub fn open_file_chooser<W: IsA<gtk::Window>>(
@@ -9,11 +9,20 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
     button: &Button,
     file: Rc<Cell<String>>,
     action: FileChooserAction,
-    filters: &[&str],
+    patterns: &[&str],
 ) {
     // {{{
     let title = format!("Select {}", button.label().unwrap());
-    let filter = ui::build_file_filter(filters);
+    let filter = {
+        // Build file filter {{{
+        let filter = FileFilter::new();
+
+        for pat in patterns.iter() {
+            filter.add_pattern(pat);
+        }
+        filter
+    };
+    // }}}
 
     let file_dialog = FileDialog::builder()
         .title(title)
@@ -46,8 +55,8 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
     } else if action == FileChooserAction::Save {
         file_dialog.save(Some(&*parent), Some(&Cancellable::new()), callback);
     }
-    // }}}
 }
+// }}}
 
 pub fn call_xdelta<W: IsA<gtk::Window>>(
     parent: Rc<W>,
@@ -104,5 +113,5 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
         .build();
 
     dialog.show(Some(&*parent));
-    // }}}
 }
+// }}}
