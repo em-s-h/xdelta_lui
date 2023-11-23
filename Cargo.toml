@@ -1,6 +1,6 @@
 [package]
 name = "xdelta_lui"
-version = "1.1.2"
+version = "1.1.4"
 edition = "2021"
 
 [dependencies]

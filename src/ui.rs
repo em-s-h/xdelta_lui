@@ -53,7 +53,28 @@ pub fn build_ui(app: &adw::Application) {
 
         // Create buttons {{{
         for b in 0..4 {
-            let button = build_button(&operation, b);
+            let button = {
+                // Build button {{{
+                let labels = if operation == Operation::Apply {
+                    vec!["ROM file:", "Patch file:", "Output file:", "Apply patch"]
+                } else {
+                    vec![
+                        "Original ROM:",
+                        "Modified ROM:",
+                        "Output file:",
+                        "Create patch",
+                    ]
+                };
+
+                Button::builder()
+                    .label(labels[b])
+                    .margin_top(12)
+                    .margin_bottom(12)
+                    .margin_start(12)
+                    .margin_end(12)
+                    .build()
+            };
+            // }}}
 
             match b {
                 // source: original rom {{{
@@ -142,13 +163,13 @@ pub fn build_ui(app: &adw::Application) {
                         @strong target_file,
                         @strong output_file,
                         @strong operation
-                            => move |_| callbacks::call_xdelta(
-                                Rc::clone(&window),
-                                Rc::clone(&source_file),
-                                Rc::clone(&target_file),
-                                Rc::clone(&output_file),
-                                &operation
-                            );
+                        => move |_| callbacks::call_xdelta(
+                            Rc::clone(&window),
+                            Rc::clone(&source_file),
+                            Rc::clone(&target_file),
+                            Rc::clone(&output_file),
+                            &operation
+                        );
                     ));
                 }
                 // }}}
@@ -165,28 +186,5 @@ pub fn build_ui(app: &adw::Application) {
 
     window.set_child(Some(&notebook));
     window.present();
-}
-// }}}
-
-fn build_button(operation: &Operation, button_index: usize) -> Button {
-    // {{{
-    let labels = if operation == &Operation::Apply {
-        vec!["ROM file:", "Patch file:", "Output file:", "Apply patch"]
-    } else {
-        vec![
-            "Original ROM:",
-            "Modified ROM:",
-            "Output file:",
-            "Create patch",
-        ]
-    };
-
-    Button::builder()
-        .label(labels[button_index])
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build()
 }
 // }}}

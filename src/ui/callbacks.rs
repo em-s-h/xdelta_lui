@@ -33,10 +33,13 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
     let callback = clone!(@strong file, @strong button => move |r: Result<File, Error>| {
         if let Ok(f) = r {
             button.set_label(
-                f.basename()
-                    .expect("Unable to obtain file basename")
-                    .to_str()
-                    .expect("Unable to convert basename to &str"),
+                &format!("{} {}",
+                    button.label().unwrap(),
+                    f.basename()
+                        .expect("Unable to obtain file basename")
+                        .to_str()
+                        .expect("Unable to convert basename to &str")
+                )
             );
 
             file.set(
@@ -66,17 +69,17 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
     operation: &Operation,
 ) {
     // {{{
-    let source = &source.take();
-    let target = &target.take();
-    let output = &output.take();
+    let s_file = source.take();
+    let t_file = target.take();
+    let o_file = output.take();
 
     let args = if operation == &Operation::Apply {
-        ["-dfs", &source, &target, &output]
+        ["-dfs", &s_file, &t_file, &o_file]
     } else {
-        ["-efs", &source, &output, &target]
+        ["-efs", &s_file, &o_file, &t_file]
     };
 
-    let output = Command::new("xdelta3")
+    let out = Command::new("xdelta3")
         .args(args)
         .output()
         .expect("Unable to run 'xdelta3 {args}'");
@@ -84,17 +87,18 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
     let details;
     let message;
 
-    if output.status.success() {
+    if out.status.success() {
+        // Alert dialog details {{{
         message = "Success!";
 
         details = if operation == &Operation::Apply {
             "ROM successfully patched!".to_string()
         } else {
             "Patch successfully created!".to_string()
-        }
+        };
     } else {
         message = "Error!";
-        let stderr = String::from_utf8(output.stderr).unwrap().trim().to_string();
+        let stderr = String::from_utf8(out.stderr).unwrap().trim().to_string();
 
         details = if stderr.contains("empty string") {
             format!(
@@ -105,6 +109,7 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
             format!("An error has occurred, \nxdelta3 error: {:?}", stderr)
         }
     }
+    // }}}
 
     let dialog = AlertDialog::builder()
         .detail(details)
@@ -112,6 +117,8 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
         .modal(true)
         .build();
 
-    dialog.show(Some(&*parent));
+    let callback = clone!(@strong parent => move |_| parent.close());
+
+    dialog.choose(Some(&*parent), Some(&Cancellable::new()), callback);
 }
 // }}}
