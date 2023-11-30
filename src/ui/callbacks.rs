@@ -66,14 +66,14 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
     source: Rc<Cell<String>>,
     target: Rc<Cell<String>>,
     output: Rc<Cell<String>>,
-    operation: &Operation,
+    operation: Operation,
 ) {
     // {{{
     let s_file = source.take();
     let t_file = target.take();
     let o_file = output.take();
 
-    let args = if operation == &Operation::Apply {
+    let args = if operation == Operation::Apply {
         ["-dfs", &s_file, &t_file, &o_file]
     } else {
         ["-efs", &s_file, &o_file, &t_file]
@@ -91,7 +91,7 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
         // Alert dialog details {{{
         message = "Success!";
 
-        details = if operation == &Operation::Apply {
+        details = if operation == Operation::Apply {
             "ROM successfully patched!".to_string()
         } else {
             "Patch successfully created!".to_string()
@@ -117,8 +117,6 @@ pub fn call_xdelta<W: IsA<gtk::Window>>(
         .modal(true)
         .build();
 
-    let callback = clone!(@strong parent => move |_| parent.close());
-
-    dialog.choose(Some(&*parent), Some(&Cancellable::new()), callback);
+    dialog.show(Some(&*parent));
 }
 // }}}
