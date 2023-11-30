@@ -5,7 +5,7 @@ A Graphical User Interface for patching ROMs/creating patches with xdelta3.
 
 ## Demo
 
-![Apply patch demo gif](./assets/xd_demo.GIF)
+![Apply patch demo mp4](./assets/xd_demo.mp4)
 
 ## Installation
 
