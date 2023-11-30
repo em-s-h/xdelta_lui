@@ -12,7 +12,14 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
     patterns: &[&str],
 ) {
     // {{{
-    let title = format!("Select {}", button.label().unwrap());
+    let label = {
+        let mut lbl = button.label().unwrap().to_string();
+        let start = lbl.find(":").unwrap_or(0) + 1;
+        lbl.replace_range(start.., " ");
+        lbl
+    };
+
+    let title = format!("Select {}", label);
     let filter = {
         // Build file filter {{{
         let filter = FileFilter::new();
@@ -33,8 +40,8 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
     let callback = clone!(@strong file, @strong button => move |r: Result<File, Error>| {
         if let Ok(f) = r {
             button.set_label(
-                &format!("{} {}",
-                    button.label().unwrap(),
+                &format!("{} \"{}\"",
+                    label,
                     f.basename()
                         .expect("Unable to obtain file basename")
                         .to_str()
