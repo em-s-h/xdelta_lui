@@ -1,7 +1,12 @@
 use crate::ui::Operation;
 use gio::{Cancellable, File};
 use glib::{clone, Error};
-use gtk::{gio, glib, prelude::*, AlertDialog, Button, FileChooserAction, FileDialog, FileFilter};
+use gtk::{
+    gio::{self, ListStore},
+    glib::{self, Type},
+    prelude::*,
+    AlertDialog, Button, FileChooserAction, FileDialog, FileFilter,
+};
 use std::{cell::Cell, process::Command, rc::Rc};
 
 pub fn open_file_chooser<W: IsA<gtk::Window>>(
@@ -20,20 +25,33 @@ pub fn open_file_chooser<W: IsA<gtk::Window>>(
     };
 
     let title = format!("Select {}", label);
-    let filter = {
-        // Build file filter {{{
-        let filter = FileFilter::new();
+    let filters = {
+        // Build list of file filters {{{
+        let list_store = ListStore::new(Type::OBJECT);
+        let main_filter = FileFilter::new();
+        let all_filter = FileFilter::new();
+        all_filter.add_pattern("*");
 
         for pat in patterns.iter() {
-            filter.add_pattern(pat);
+            main_filter.add_pattern(pat);
         }
-        filter
+
+        if patterns[0].contains("xdelta") {
+            main_filter.set_name(Some("Xdelta files"));
+        } else {
+            main_filter.set_name(Some("ROM files"));
+        }
+        all_filter.set_name(Some("All files"));
+
+        list_store.append(&main_filter);
+        list_store.append(&all_filter);
+        list_store
     };
     // }}}
 
     let file_dialog = FileDialog::builder()
         .title(title)
-        .default_filter(&filter)
+        .filters(&filters)
         .modal(true)
         .build();
 
