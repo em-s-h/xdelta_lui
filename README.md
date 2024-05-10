@@ -1,3 +1,10 @@
+# Archived
+
+I'm archiving this app, I'm no longer interested in working on it.
+
+
+If you still need a GUI for x-delta you can use this https://github.com/dan0v/xdelta3-cross-gui
+
 # Xdelta - LUI
 
 Xdelta - Linux User Interface <br> 
